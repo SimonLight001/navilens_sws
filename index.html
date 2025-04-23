@@ -63,7 +63,7 @@
     const tenantId = "spaces-tenant-dc8d3aa5";
     const locationId = "location-32430c31";
     const defaultFloor = 0; // Example: 0, 1, etc.
-    const initialPos = [0, 0]; // Replace with real [longitude, latitude]
+    const initialPos = [51.4450674, -0.4454505];
     const initialZoom = 20;
     const initialPitch = 65;
     const initialBearing = 118;
@@ -80,12 +80,16 @@
       initialPitch: initialPitch,
       initialBearing: initialBearing,
       poiLegendHolder: 'poi-switch',
-      hideNavigationControls: true
+      hideNavigationControls: false
     });
 
     map.listen(RichMapEvent.ON_LOAD, function () {
       console.log('Map fully loaded.');
     });
+
+    console.log(SpacesRichMap.getFloors());
+    SpacesRichMap.showRoomLabels();
+    SpacesRichMap.showPOIs();
   </script>
 </body>
 </html>
