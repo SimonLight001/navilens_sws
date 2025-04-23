@@ -1,77 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spaces SDK Demo</title>
-    <script src="https://cdn.ciscospaces.io/sdk/spaces-sdk.min.js"></script> <!-- Ensure correct SDK URL -->
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-            position: relative;
-        }
-        .top-right {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 200px; /* Adjust as needed */
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
-        .config-box {
-            background: white;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cisco Spaces Rich Map Demo</title>
+
+  <!-- Include the actual Cisco Spaces Rich Maps SDK -->
+  <script src="https://rms.dnaspaces.io/js/spaces-rich-maps-1.0.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      position: relative;
+    }
+
+    /* Map takes full screen behind */
+    #map {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    /* Top-right image overlay */
+    .top-right {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 180px;
+      z-index: 2;
+    }
+
+    /* Optional: POI switcher */
+    #poi-switch {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 6px;
+      z-index: 2;
+    }
+  </style>
 </head>
 <body>
 
-    <img src="32FBFC49-4EC5-4BB5-A16E-241545D64F21.png" alt="NaviLens Code" class="top-right">
+  <!-- Top-right image -->
+  <img src="sample_navilens.png" alt="NaviLens Code" class="top-right" />
 
-    <div class="container">
-        <h1>Spaces SDK Integration</h1>
+  <!-- Map container -->
+  <div id="map"></div>
 
-        <div class="config-box">
-            <h3>Update Configuration Here</h3>
-            <label>API Key: <input type="text" id="apiKey" value="YOUR_API_KEY_HERE"></label><br>
-            <label>Location ID: <input type="text" id="locationId" value="YOUR_LOCATION_ID_HERE"></label><br>
-            <button onclick="initializeSpacesSDK()">Initialize SDK</button>
-        </div>
+  <!-- POI buttons will go here -->
+  <div id="poi-switch"><p>POIs will show here</p></div>
 
-        <p id="status">SDK Status: Not Initialized</p>
-    </div>
+  <script>
+    // === 🔧 Replace these placeholders with real values ===
+    const accessToken = "9DAF7E77AEB34D90A288ADE92A39B956";
+    const tenantId = "spaces-tenant-dc8d3aa5";
+    const locationId = "location-32430c31";
+    const defaultFloor = 0; // Example: 0, 1, etc.
+    const initialPos = [0, 0]; // Replace with real [longitude, latitude]
+    const initialZoom = 20;
+    const initialPitch = 65;
+    const initialBearing = 118;
 
-    <script>
-        function initializeSpacesSDK() {
-            const apiKey = document.getElementById('apiKey').value;
-            const locationId = document.getElementById('locationId').value;
+    // === 🚀 Initialize the Rich Map ===
+    const map = new SpacesRichMap({
+      mapContainer: 'map',
+      token: accessToken,
+      tenantId: tenantId,
+      locationId: locationId,
+      defaultFloor: defaultFloor,
+      initialPos: initialPos,
+      initialZoom: initialZoom,
+      initialPitch: initialPitch,
+      initialBearing: initialBearing,
+      poiLegendHolder: 'poi-switch',
+      hideNavigationControls: true
+    });
 
-            if (!apiKey || !locationId) {
-                alert("Please enter API Key and Location ID.");
-                return;
-            }
-
-            // Initialize Cisco Spaces SDK
-            CiscoSpaces.init({
-                apiKey: apiKey,
-                onSuccess: function() {
-                    document.getElementById('status').innerText = "SDK Status: Initialized";
-                    console.log("Spaces SDK initialized successfully.");
-                },
-                onFailure: function(error) {
-                    document.getElementById('status').innerText = "SDK Status: Failed to Initialize";
-                    console.error("Spaces SDK initialization failed:", error);
-                }
-            });
-        }
-    </script>
-
+    map.listen(RichMapEvent.ON_LOAD, function () {
+      console.log('Map fully loaded.');
+    });
+  </script>
 </body>
 </html>
